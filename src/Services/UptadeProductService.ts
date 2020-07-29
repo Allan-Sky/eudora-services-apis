@@ -1,9 +1,10 @@
 import { getRepository } from 'typeorm'
 import Product from '../entity/Product'
+import Type from '../entity/Type'
 
 interface Request{
     name: string
-    type: string
+    type: Type
     price:number
     amount:number
     profit:number,
@@ -11,7 +12,7 @@ interface Request{
 }
 
 export default new class UptadeProductService {
-  public async execute ({ name, type, price, amount, profit, product_id } : Request) {
+  public async execute ({ name, type, price, amount, profit, product_id } : Request) :Promise<void> {
     const ProductsRepository = getRepository(Product)
 
     const existsProductsSameName = await ProductsRepository.findOne({ where: { name } })
@@ -19,8 +20,6 @@ export default new class UptadeProductService {
     if (existsProductsSameName) {
       throw new Error('Already exists product with this name')
     }
-    const product = await ProductsRepository.update({ id: product_id }, { name, type, price, amount, profit })
-
-    return product
+    await ProductsRepository.update({ id: product_id }, { name, type, price, amount, profit })
   }
 }()

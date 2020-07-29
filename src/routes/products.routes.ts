@@ -18,7 +18,7 @@ ProductsRouter.post('/', async (request, response) => {
 ProductsRouter.get('/', async (request, response) => {
   const ProductRepository = getRepository(Product)
 
-  const products = await ProductRepository.find()
+  const products = await ProductRepository.find({ relations: ['type'] })
 
   return response.json(products)
 })
